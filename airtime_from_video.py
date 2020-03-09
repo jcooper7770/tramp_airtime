@@ -7,6 +7,7 @@
 
  TODO:
    - Finetune to get the actual airtimes
+   - Use ffmpeg or other software to extract audio instead of doing manually
 """
 
 import scipy.io.wavfile
@@ -24,6 +25,14 @@ def convert_index_to_time(index, video_length, size):
 
 class Routine:
     def __init__(self, video_file, start_time, end_time):
+        """
+        :param video_file: The wav file path
+        :type video_file: str
+        :param start_time: The start time of the routine in the video (in seconds)
+        :type start_time: int
+        :param end_time: The end time of the routine in the video (in seconds)
+        :type end_time: int
+        """
         self.video_file = video_file
         self.start_time = start_time
         self.end_time = end_time
@@ -35,13 +44,6 @@ class Routine:
     def get_airtime(self):
         """
         Returns the airtime from the routine
-
-        :param video_file: The wav file path
-        :type video_file: str
-        :param start_time: The start time of the routine in the video (in seconds)
-        :type start_time: int
-        :param end_time: The end time of the routine in the video (in seconds)
-        :type end_time: int
 
         :return: The airtime of the routine
         :rtype: float
@@ -83,6 +85,9 @@ class Routine:
     def create_jump_wav(self, wav_file):
         """
         Creates a wav file with only jumps
+
+        :param wav_file: The file to save to
+        :type wav_file: str
         """
         # Get the peaks
         if self.peaks is None:
@@ -118,6 +123,16 @@ class Routine:
 def get_peak_sounds(start_time, end_time, video_file):
     """
     Returns the peak information
+
+    :param start_time: The start time of the routine in the video (in seconds)
+    :type start_time: int
+    :param end_time: The end time of the routine in the video (in seconds)
+    :type end_time: int
+    :param video_file: The wav file path
+    :type video_file: str
+
+    :return: The peak indices, the routine array, and the routine length
+    :rtype: Tuple<np.array, np.array, int>
     """
     x = scipy.io.wavfile.read(video_file)
     #print(x)
